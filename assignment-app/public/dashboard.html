@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Nexus App</title>
+    <meta name="description" content="User dashboard to view registered members.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+    <nav class="glass-nav">
+        <div class="nav-content">
+            <div class="brand">
+                <div class="logo-icon small">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h2>Nexus</h2>
+            </div>
+            <div class="user-menu">
+                <span id="current-user-display" class="user-badge">Loading...</span>
+                <button id="logout-btn" class="btn secondary-btn">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <header class="dashboard-header animated-fade-up">
+            <h1>Community Members</h1>
+            <p>Here are all the registered users in the database.</p>
+        </header>
+
+        <div class="glass-panel table-panel animated-fade-up delay-1">
+            <div id="users-loading" class="state-container">
+                <div class="spinner large"></div>
+                <p>Fetching latest users...</p>
+            </div>
+            
+            <div id="users-error" class="state-container hidden">
+                <div class="error-icon">⚠️</div>
+                <p id="error-text">Failed to load users.</p>
+                <button id="retry-btn" class="btn secondary-btn mt-4">Retry</button>
+            </div>
+
+            <table id="users-table" class="hidden user-list-table">
+                <thead>
+                    <tr>
+                        <th>Avatar</th>
+                        <th>Username</th>
+                        <th>Joined Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="users-tbody">
+                    <!-- Rows injected by JS -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        // Check if user is logged in immediately, else redirect
+        // We do this by checking if the 'user' cookie exists
+        if (!document.cookie.includes('user=')) {
+            window.location.href = '/index.html';
+        } else {
+            // Get username from cookie
+            const userCookie = document.cookie.split('; ').find(row => row.startsWith('user='));
+            if(userCookie) {
+                document.getElementById('current-user-display').textContent = '@' + decodeURIComponent(userCookie.split('=')[1]);
+            }
+            
+            // Fetch users only on dashboard
+            document.addEventListener('DOMContentLoaded', fetchUsers);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome | Nexus App</title>
+    <meta name="description" content="Secure login and registration portal for Nexus App.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <main class="container">
+        <div class="glass-panel auth-panel">
+            <div class="brand">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h1>Nexus</h1>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active">
+                <h2>Welcome back</h2>
+                <p class="subtitle">Enter your details to access your account</p>
+                
+                <div class="input-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" required placeholder="Enter your username" autocomplete="username">
+                </div>
+
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" autocomplete="current-password">
+                </div>
+
+                <div class="form-messages" id="login-message"></div>
+
+                <button type="submit" class="btn primary-btn btn-animate" id="login-btn">
+                    <span>Sign In</span>
+                    <div class="spinner hidden"></div>
+                </button>
+
+                <p class="switch-mode">
+                    Don't have an account? <a href="#" id="show-register">Register now</a>
+                </p>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form hidden">
+                <h2>Create account</h2>
+                <p class="subtitle">Join Nexus in seconds</p>
+                
+                <div class="input-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" required minlength="3" placeholder="Choose a username" autocomplete="username">
+                </div>
+
+                <div class="input-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required minlength="6" placeholder="Create a password" autocomplete="new-password">
+                </div>
+
+                <div class="form-messages" id="register-message"></div>
+
+                <button type="submit" class="btn primary-btn btn-animate" id="register-btn">
+                    <span>Create Account</span>
+                    <div class="spinner hidden"></div>
+                </button>
+
+                <p class="switch-mode">
+                    Already have an account? <a href="#" id="show-login">Sign in</a>
+                </p>
+            </form>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
