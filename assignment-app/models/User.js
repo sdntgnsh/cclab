@@ -10,7 +10,13 @@ const userSchema = new mongoose.Schema({
     },
     passwordHash: {
         type: String,
-        required: true
+        required: false // Optional now because of Google SSO
+    },
+    googleId: {
+        type: String,
+        required: false,
+        unique: true,
+        sparse: true // Allows multiple null values
     },
     createdAt: {
         type: Date,

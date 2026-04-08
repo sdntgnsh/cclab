@@ -5,10 +5,49 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const path = require('path');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('./models/User');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Passport Configuration
+passport.use(new GoogleStrategy({
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: "/auth/google/callback" // Note: relative URL works if behind proxy, or use full URL.
+  },
+  async function(accessToken, refreshToken, profile, cb) {
+      try {
+          // Check if user already exists
+          let user = await User.findOne({ googleId: profile.id });
+          
+          if (!user) {
+              // Create a unique username safely
+              let baseUsername = profile.emails && profile.emails.length > 0
+                ? profile.emails[0].value.split('@')[0]
+                : profile.displayName.replace(/\s+/g, '').toLowerCase();
+              let username = baseUsername;
+              let counter = 1;
+              while (await User.findOne({ username })) {
+                  username = `${baseUsername}${counter}`;
+                  counter++;
+              }
+              
+              // Create new user
+              user = new User({
+                  username: username,
+                  googleId: profile.id
+              });
+              await user.save();
+          }
+          return cb(null, user);
+      } catch (err) {
+          return cb(err, null);
+      }
+  }
+));
 
 // Middleware
 app.use(express.json());
@@ -23,6 +62,24 @@ mongoose.connect(process.env.MONGODB_URI.trim())
 .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
 // Routes
+
+// --- Google OAuth Routes ---
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'], session: false })
+);
+
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { session: false, failureRedirect: '/index.html' }),
+  function(req, res) {
+    // Successful authentication, issue cookie similar to normal login
+    res.cookie('user', req.user.username, { 
+        httpOnly: false,
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
+    res.redirect('/dashboard.html');
+  }
+);
+
 // 1. Register
 app.post('/api/register', async (req, res) => {
     try {
