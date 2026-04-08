@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "/auth/google/callback" // Note: relative URL works if behind proxy, or use full URL.
+    callbackURL: "http://35.190.176.176.nip.io/auth/google/callback" // Must match Google Cloud exactly
   },
   async function(accessToken, refreshToken, profile, cb) {
       try {
