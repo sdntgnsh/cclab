@@ -18,6 +18,12 @@ const userSchema = new mongoose.Schema({
         unique: true,
         sparse: true // Allows multiple null values
     },
+    demoSsoId: {
+        type: String,
+        required: false,
+        unique: true,
+        sparse: true
+    },
     createdAt: {
         type: Date,
         default: Date.now
